@@ -1,0 +1,1 @@
+# Singularity Enterprise Value Generator
