@@ -32,3 +32,17 @@ type Values struct {
 	ServiceMonitor  ServiceMonitor
 	PullCredentials PullCredentials
 }
+
+func ConfigValues(root *Values) {
+	ConfigInfrastructure(root)
+	ConfigExternal(root)
+	ConfigAuthService(root)
+	ConfigKeyService(root)
+	ConfigCloudLibrary(root)
+	ConfigRemoteBuild(root)
+	ConfigFrontend(root)
+}
+
+func (v *Values) Configure() {
+	ConfigValues(v)
+}

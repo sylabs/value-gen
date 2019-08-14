@@ -403,6 +403,7 @@ remote-build-manager:
     # library_uri: "https://library.lvh.me"
     # manager_uri: "https://manager.lvh.me"
     # server_uri: "https://build.lvh.me"
+    kubevirt_image_pull_secret: {{ .PullCredentials.Name }}
   rsaSecretName: {{ .TokenService.RSASecretName }} 
 
 remote-build-jim:
