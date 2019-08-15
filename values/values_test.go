@@ -12,4 +12,7 @@ func TestRender(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	if b.Len() == 0 {
+		t.Error(err)
+	}
 }
