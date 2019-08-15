@@ -1,18 +1,14 @@
 package values
 
-import "fmt"
-
 type CloudLibraryServer struct {
 	URI string
 }
 
-func ConfigCloudLibrary(root *Values) {
+func ConfigCloudLibrary(root *Values) error {
 	vals := &root.CloudLibraryServer
-	fmt.Println("CloudLibraryServer URI:")
 	defaultURI := "https://library.lvh.me"
-	fmt.Printf("[%s] ", defaultURI)
-	fmt.Scanln(&vals.URI)
-	if vals.URI == "" {
-		vals.URI = defaultURI
-	}
+	return Ask("CloudLibraryServer URI:", func() (err error) {
+		vals.URI, err = ScanString(defaultURI)
+		return
+	})
 }

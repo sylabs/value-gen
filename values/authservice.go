@@ -1,9 +1,7 @@
 package values
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 )
 
 type TokenService struct {
@@ -12,11 +10,13 @@ type TokenService struct {
 }
 
 type OAuth2 struct {
+	Enabled      bool
 	ClientID     string
 	ClientSecret string
 }
 
 type CustomOAuth2 struct {
+	Enabled      bool
 	Name         string
 	ClientID     string
 	ClientSecret string
@@ -47,105 +47,185 @@ type Hydra struct {
 	LoginURL       string
 }
 
-func configConsentService(root *Values) {
+func configConsentService(root *Values) error {
 	vals := &root.ConsentService
-	fmt.Println("ConsentService URI:")
-	fmt.Print("[https://auth.lvh.me] ")
-	fmt.Scanln(&vals.URI)
-
-	if vals.URI == "" {
-		vals.URI = "https://auth.lvh.me"
+	if err := Ask("ConsentService URI:", func() (err error) {
+		vals.URI, err = ScanString("https://auth.lvh.me")
+		return
+	}); err != nil {
+		return err
 	}
 
-	var useGoogle, useGitHub, useMicrosoft, useCustom1, useCustom2, useCustom3 bool
-	fmt.Println("Configure Google OpenID provider?")
-	fmt.Print("[y/N] ")
-	fmt.Scanln(&useGoogle)
-	if useGoogle {
-		fmt.Println("Google OAuth2 ClientID:")
-		fmt.Scanln(&vals.OAuth.Google.ClientID)
-		fmt.Println("Google OAuth2 ClientSecret:")
-		fmt.Scanln(&vals.OAuth.Google.ClientSecret)
+	if err := Ask("Configure Google OpenID provider?", func() (err error) {
+		vals.OAuth.Google.Enabled, err = ScanYesNo(false)
+		return
+	}); err != nil {
+		return err
 	}
-	fmt.Println("Configure GitHub OpenID provider?")
-	fmt.Print("[y/N] ")
-	fmt.Scanln(&useGitHub)
-	if useGitHub {
-		fmt.Println("GitHub OAuth2 ClientID:")
-		fmt.Scanln(&vals.OAuth.GitHub.ClientID)
-		fmt.Println("GitHub OAuth2 ClientSecret")
-		fmt.Scanln(&vals.OAuth.GitHub.ClientSecret)
-	}
-	fmt.Println("Configure Microsoft OpenID provider?")
-	fmt.Print("[y/N] ")
-	fmt.Scanln(&useMicrosoft)
-	if useMicrosoft {
-		fmt.Println("Microsoft OAuth2 ClientID:")
-		fmt.Scanln(&vals.OAuth.Microsoft.ClientID)
-		fmt.Println("Microsoft OAuth2 ClientSecret:")
-		fmt.Scanln(&vals.OAuth.Microsoft.ClientSecret)
-	}
-	fmt.Println("Configure a Custom OpenID provider?")
-	fmt.Print("[y/N] ")
-	fmt.Scanln(&useCustom1)
 
-	parseCustomOAuth := func(c *CustomOAuth2) {
-		fmt.Println("Provider Name:")
-		fmt.Scanln(&c.Name)
-		fmt.Println("Provider ClientID:")
-		fmt.Scanln(&c.ClientID)
-		fmt.Println("Provider ClientSecret:")
-		fmt.Scanln(&c.ClientSecret)
-		fmt.Println("Provider IssuerURL:")
-		fmt.Scanln(&c.IssuerURL)
-		fmt.Println("Provider Scope:")
-		scanner := bufio.NewScanner(os.Stdin)
-		scope := ""
-		for scanner.Scan() {
-			scope = scope + " " + scanner.Text()
+	if vals.OAuth.Google.Enabled {
+		if err := Ask("Google OAauth2 ClientID:", func() (err error) {
+			vals.OAuth.Google.ClientID, err = ScanString("")
+			return
+		}); err != nil {
+			return err
 		}
-		c.Scope = scope
+		if err := Ask("Google OAuth2 ClientSecret:", func() (err error) {
+			vals.OAuth.Google.ClientSecret, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
 	}
 
-	if useCustom1 {
-		parseCustomOAuth(&vals.OAuth.Custom1)
-		fmt.Println("Configure another Custom OpenID provider?")
-		fmt.Print("[y/N] ")
-		fmt.Scanln(&useCustom2)
-		if useCustom2 {
-			parseCustomOAuth(&vals.OAuth.Custom2)
-			fmt.Println("Configure another Custom OpenID provider?")
-			fmt.Print("[y/N] ")
-			fmt.Scanln(&useCustom3)
-			if useCustom3 {
-				parseCustomOAuth(&vals.OAuth.Custom3)
+	if err := Ask("Configure GitHub OpenID provider?", func() (err error) {
+		vals.OAuth.GitHub.Enabled, err = ScanYesNo(false)
+		return
+	}); err != nil {
+		return err
+	}
+	if vals.OAuth.GitHub.Enabled {
+		if err := Ask("GitHub OAuth2 ClientID:", func() (err error) {
+			vals.OAuth.GitHub.ClientID, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+		if err := Ask("GitHub OAuth2 ClientSecret:", func() (err error) {
+			vals.OAuth.GitHub.ClientSecret, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+	}
+
+	if err := Ask("Configure Microsoft OpenID provider?", func() (err error) {
+		vals.OAuth.Microsoft.Enabled, err = ScanYesNo(false)
+		return
+	}); err != nil {
+		return err
+	}
+
+	if vals.OAuth.Microsoft.Enabled {
+		if err := Ask("Microsoft OAuth2 ClientID:", func() (err error) {
+			vals.OAuth.Microsoft.ClientID, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+
+		if err := Ask("Microsoft OAuth2 ClientSecret:", func() (err error) {
+			vals.OAuth.Microsoft.ClientSecret, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+	}
+
+	parseCustomOAuth := func(c *CustomOAuth2) error {
+		if err := Ask("Provider Name:", func() (err error) {
+			c.Name, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+
+		if err := Ask("Provider ClientID:", func() (err error) {
+			c.ClientID, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+		if err := Ask("Provider ClientSecret:", func() (err error) {
+			c.ClientSecret, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+		if err := Ask("Provider ClientSecret:", func() (err error) {
+			c.IssuerURL, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+		if err := Ask("Provider Scope:", func() (err error) {
+			c.Scope, err = ScanString("")
+			return
+		}); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := Ask("Configure a Custom OpenID provider?", func() (err error) {
+		vals.OAuth.Custom1.Enabled, err = ScanYesNo(false)
+		return
+	}); err != nil {
+		return err
+	}
+
+	if vals.OAuth.Custom1.Enabled {
+		if err := parseCustomOAuth(&vals.OAuth.Custom1); err != nil {
+			return err
+		}
+
+		if err := Ask("Configure a second Custom OpenID provider?", func() (err error) {
+			vals.OAuth.Custom2.Enabled, err = ScanYesNo(false)
+			return
+		}); err != nil {
+			return err
+		}
+		if vals.OAuth.Custom2.Enabled {
+			if err := parseCustomOAuth(&vals.OAuth.Custom2); err != nil {
+				return err
+			}
+
+			if err := Ask("Configure a third Custom OpenID provider?", func() (err error) {
+				vals.OAuth.Custom3.Enabled, err = ScanYesNo(false)
+				return
+			}); err != nil {
+				return err
+			}
+			if vals.OAuth.Custom3.Enabled {
+				if err := parseCustomOAuth(&vals.OAuth.Custom3); err != nil {
+					return err
+				}
 			}
 		}
 	}
-	fmt.Println("Username to coerce as Administrator:")
-	fmt.Scanln(&vals.AdminUser)
+
+	if err := Ask("Username to coerce as Admin:", func() (err error) {
+		vals.AdminUser, err = ScanString("admin")
+		return
+	}); err != nil {
+		return err
+	}
+	return nil
 }
 
-func configHydra(root *Values) {
+func configHydra(root *Values) error {
 	vals := &root.Hydra
-	fmt.Println("Hydra URI:")
-	fmt.Print("[https://hydra.lvh.me] ")
-	fmt.Scanln(&vals.URI)
-	if vals.URI == "" {
-		vals.URI = "https://hydra.lvh.me"
+
+	if err := Ask("Hydra URI:", func() (err error) {
+		vals.URI, err = ScanString("https://hydra.lvh.me")
+		return
+	}); err != nil {
+		return err
 	}
-	fmt.Println("Consent URL:")
 	defaultConsentURL := root.ConsentService.URI + "/v1/consent"
-	fmt.Printf("[%s] ", defaultConsentURL)
-	fmt.Scanln(&vals.ConsentURL)
-	if vals.ConsentURL == "" {
-		vals.ConsentURL = defaultConsentURL
+	if err := Ask("Consent URL:", func() (err error) {
+		vals.ConsentURL, err = ScanString(defaultConsentURL)
+		return
+	}); err != nil {
+		return err
 	}
-	fmt.Println("Login URL:")
+
 	defaultLoginURL := root.ConsentService.URI + "/v1/login"
-	fmt.Scanln(&vals.LoginURL)
-	if vals.LoginURL == "" {
-		vals.LoginURL = defaultLoginURL
+	if err := Ask("Login URL:", func() (err error) {
+		vals.LoginURL, err = ScanString(defaultLoginURL)
+		return
+	}); err != nil {
+		return err
 	}
 
 	fmt.Println("Generating random CookieSecret...")
@@ -156,27 +236,35 @@ func configHydra(root *Values) {
 	vals.ClientSecret = randomSecret(64)
 	fmt.Println("Generating random ConsentSecret...")
 	vals.ConsentSecret = randomSecret(64)
+
+	return nil
 }
 
-func configTokenService(root *Values) {
+func configTokenService(root *Values) error {
 	vals := &root.TokenService
-	fmt.Println("TokenService URI:")
-	defaultURI := "https://token.lvh.me"
-	fmt.Printf("[%s] ", defaultURI)
-	fmt.Scanln(&vals.URI)
-	if vals.URI == "" {
-		vals.URI = defaultURI
+
+	if err := Ask("TokenService URI:", func() (err error) {
+		vals.URI, err = ScanString("https://token.lvh.me")
+		return
+	}); err != nil {
+		return err
 	}
+
 	defaultRSASecretName := "singularity-enterprise-token"
-	fmt.Println("Token Name:")
-	fmt.Printf("[%s] ", defaultRSASecretName)
-	if vals.RSASecretName == "" {
-		vals.RSASecretName = defaultRSASecretName
-	}
+	vals.RSASecretName = defaultRSASecretName
+
+	return nil
 }
 
-func ConfigAuthService(vals *Values) {
-	configConsentService(vals)
-	configHydra(vals)
-	configTokenService(vals)
+func ConfigAuthService(vals *Values) error {
+	if err := configConsentService(vals); err != nil {
+		return err
+	}
+	if err := configHydra(vals); err != nil {
+		return err
+	}
+	if err := configTokenService(vals); err != nil {
+		return err
+	}
+	return nil
 }

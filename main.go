@@ -2,14 +2,22 @@ package main
 
 import (
 	"fmt"
-	"html/template"
+	"io"
 	"os"
 
 	"github.com/sylabs/value-gen/values"
 )
 
 func usage() {
+	fmt.Println("Usage:\nvalue-gen <values.yaml>")
+}
 
+func Run(out io.Writer) error {
+	var val values.Values
+	if err := val.Configure(); err != nil {
+		return err
+	}
+	return val.Render(out)
 }
 
 func main() {
@@ -18,20 +26,16 @@ func main() {
 		os.Exit(1)
 	}
 	outFileName := os.Args[1]
-	outFile, err := os.Open(outFileName)
+	outFile, err := os.OpenFile(outFileName, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
-		fmt.Printf("Error opening file %v: %v", outFile, err)
+		fmt.Printf("Error opening file %v: %v\n", outFile, err)
 		os.Exit(1)
 	}
-	var val values.Values
-	val.Configure()
-	t, err := template.New("values").Parse(values.Template)
+	err = Run(outFile)
 	if err != nil {
-		panic(err) // bad hardcoded string, panic
-	}
-	err = t.Execute(outFile, val)
-	if err != nil {
-		fmt.Printf("Error rendering values: %v", err)
+		fmt.Printf("Error rendering values: %v\n", err)
 		os.Exit(1)
+	} else {
+		fmt.Printf("Successfully rendered yaml to %s\n", outFileName)
 	}
 }

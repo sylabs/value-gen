@@ -1,7 +1,5 @@
 package values
 
-import "fmt"
-
 type RemoteBuildServer struct {
 	URI string
 }
@@ -10,29 +8,30 @@ type RemoteBuildManager struct {
 	URI string
 }
 
-func configRemoteBuildServer(root *Values) {
+func configRemoteBuildServer(root *Values) error {
 	vals := &root.RemoteBuildServer
-	fmt.Println("RemoteBuildServer URI:")
 	defaultServer := "https://build.lvh.me"
-	fmt.Printf("[%s] ", defaultServer)
-	fmt.Scanln(&vals.URI)
-	if vals.URI == "" {
-		vals.URI = defaultServer
-	}
+	return Ask("RemoteBuildServer URI:", func() (err error) {
+		vals.URI, err = ScanString(defaultServer)
+		return
+	})
 }
 
-func configRemoteBuildManager(root *Values) {
+func configRemoteBuildManager(root *Values) error {
 	vals := &root.RemoteBuildManager
-	fmt.Println("RemoteBuildManager URI:")
 	defaultManager := "https://manager.lvh.me"
-	fmt.Printf("[%s] ", defaultManager)
-	fmt.Scanln(&vals.URI)
-	if vals.URI == "" {
-		vals.URI = defaultManager
-	}
+	return Ask("RemoteBuildManager URI:", func() (err error) {
+		vals.URI, err = ScanString(defaultManager)
+		return
+	})
 }
 
-func ConfigRemoteBuild(root *Values) {
-	configRemoteBuildServer(root)
-	configRemoteBuildManager(root)
+func ConfigRemoteBuild(root *Values) error {
+	if err := configRemoteBuildServer(root); err != nil {
+		return err
+	}
+	if err := configRemoteBuildManager(root); err != nil {
+		return err
+	}
+	return nil
 }

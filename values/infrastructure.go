@@ -1,7 +1,5 @@
 package values
 
-import "fmt"
-
 type Ingress struct {
 	Enabled bool
 }
@@ -20,7 +18,7 @@ type PullCredentials struct {
 	Password string
 }
 
-func ConfigInfrastructure(root *Values) {
+func ConfigInfrastructure(root *Values) error {
 	root.Ingress.Enabled = true
 
 	// Not supporting routes at the moment
@@ -29,9 +27,18 @@ func ConfigInfrastructure(root *Values) {
 	root.ServiceMonitor.Enabled = false
 
 	root.PullCredentials.Name = "sylabs-regcred"
-	fmt.Println("Sylabs Registry Username:")
-	fmt.Print("[ex: john@doe.com] ")
-	fmt.Scanln(&root.PullCredentials.Username)
-	fmt.Println("Sylabs Registry Password:")
-	fmt.Scanln(&root.PullCredentials.Password)
+
+	if err := Ask("Sylabs Registry Username:", func() (err error) {
+		root.PullCredentials.Username, err = ScanString("")
+		return
+	}); err != nil {
+		return err
+	}
+	if err := Ask("Sylabs Registry Password:", func() (err error) {
+		root.PullCredentials.Password, err = ScanString("")
+		return
+	}); err != nil {
+		return err
+	}
+	return nil
 }

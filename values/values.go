@@ -1,5 +1,10 @@
 package values
 
+import (
+	"html/template"
+	"io"
+)
+
 type Values struct {
 	// Auth Service Structs
 	TokenService   TokenService
@@ -25,6 +30,7 @@ type Values struct {
 	MongoDB  MongoDB
 	Postgres Postgres
 	Redis    Redis
+	Minio    Minio
 
 	// Infrastructure Related Structs
 	Ingress         Ingress
@@ -33,16 +39,25 @@ type Values struct {
 	PullCredentials PullCredentials
 }
 
-func ConfigValues(root *Values) {
-	ConfigInfrastructure(root)
-	ConfigExternal(root)
-	ConfigAuthService(root)
-	ConfigKeyService(root)
-	ConfigCloudLibrary(root)
-	ConfigRemoteBuild(root)
-	ConfigFrontend(root)
+func ConfigValues(root *Values) error {
+
+	cs := [](func(*Values) error){ConfigInfrastructure, ConfigExternal, ConfigAuthService, ConfigKeyService, ConfigCloudLibrary, ConfigRemoteBuild, ConfigFrontend}
+	for _, c := range cs {
+		if err := c(root); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
-func (v *Values) Configure() {
-	ConfigValues(v)
+func (v *Values) Configure() (err error) {
+	return ConfigValues(v)
+}
+
+func (v *Values) Render(w io.Writer) (err error) {
+	t, err := template.New("values").Parse(Template)
+	if err != nil {
+		panic(err) // bad hardcoded string, panic
+	}
+	return t.Execute(w, v)
 }

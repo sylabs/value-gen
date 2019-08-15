@@ -1,22 +1,24 @@
 package values
 
-import "fmt"
-
 type Frontend struct {
 	URI       string
 	RevokeURI string
 }
 
-func ConfigFrontend(root *Values) {
+func ConfigFrontend(root *Values) error {
 	vals := &root.Frontend
-	fmt.Println("Frontend URI:")
-	fmt.Print("[https://cloud.lvh.me] ")
-	fmt.Scanln(&vals.URI)
-	defaultRevoke := vals.URI + "/assets/html/auth-revoke.html"
-	fmt.Println("Revoke URI:")
-	fmt.Printf("[%s] ", defaultRevoke)
-	fmt.Scanln(&vals.RevokeURI)
-	if vals.RevokeURI == "" {
-		vals.RevokeURI = defaultRevoke
+	if err := Ask("Frontend URI:", func() (err error) {
+		vals.URI, err = ScanString("")
+		return
+	}); err != nil {
+		return err
 	}
+	defaultRevoke := vals.URI + "/assets/html/auth-revoke.html"
+	if err := Ask("Revoke URI:", func() (err error) {
+		vals.RevokeURI, err = ScanString(defaultRevoke)
+		return
+	}); err != nil {
+		return err
+	}
+	return nil
 }
