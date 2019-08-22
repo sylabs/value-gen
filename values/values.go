@@ -1,8 +1,10 @@
 package values
 
 import (
-	"html/template"
 	"io"
+	"text/template"
+
+	"github.com/Masterminds/sprig"
 )
 
 type Values struct {
@@ -55,7 +57,7 @@ func (v *Values) Configure() (err error) {
 }
 
 func (v *Values) Render(w io.Writer) (err error) {
-	t, err := template.New("values").Parse(Template)
+	t, err := template.New("values").Funcs(sprig.TxtFuncMap()).Parse(Template)
 	if err != nil {
 		panic(err) // bad hardcoded string, panic
 	}

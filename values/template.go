@@ -42,7 +42,7 @@ consent-service:
     mongodbPassword: {{ .MongoDB.Password }}
     mongodbRootPassword: {{ .MongoDB.RootPassword }}
     mongodbDatabase: {{ .MongoDB.Database }}
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
 
 mongodb:
   mongodbUsername: {{ .MongoDB.Username }} 
@@ -60,11 +60,11 @@ hydra:
     postgresqlUsername: {{ .Postgres.Username }}
     postgresqlPassword: {{ .Postgres.Password }}
     postgresqlDatabase: {{ .Postgres.Database }} 
-    postgresqlEndpoint: {{ .Postgres.Endpoint }} 
+    postgresqlEndpoint: {{ .Postgres.Endpoint | quote }} 
   config:
     system:
-      secret:  {{ .Hydra.ClientSecret }}
-      cookiesecret:  {{ .Hydra.CookieSecret }}
+      secret: {{ .Hydra.ClientSecret }}
+      cookiesecret: {{ .Hydra.CookieSecret }}
 
   ingress:
     enabled: {{ .Ingress.Enabled }}
@@ -80,8 +80,8 @@ hydra:
 
   env:
     oauth2_issuer_url: {{ .Hydra.URI }}
-    oauth2_consent_url: {{ .Hydra.ConsentURL }} 
-    oauth2_login_url: {{ .Hydra.LoginURL }} 
+    oauth2_consent_url: {{ .ConsentService.URI }}/v1/consent
+    oauth2_login_url: {{ .ConsentService.URI }}/v1/login
     oauth2_logout_redirect_url: {{ .Frontend.URI }}
     callback_urls: {{ .Frontend.URI -}},{{- .Frontend.RevokeURI }}
     hydra_frontend_secret: {{ .Hydra.FrontendSecret }}
@@ -112,7 +112,7 @@ token-service:
     mongodbPassword: {{ .MongoDB.Password }}
     mongodbRootPassword: {{ .MongoDB.RootPassword }} 
     mongodbDatabase: {{ .MongoDB.Database }} 
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
   rsaSecretName: {{ .TokenService.RSASecretName }} 
 
 frontend:
@@ -146,7 +146,7 @@ key-service:
       - name: {{ .PullCredentials.Name }}
 
   mongodb:
-    mongodbHost: {{ .MongoDB.Endpoint }} 
+    mongodbHost: {{ .MongoDB.Endpoint | quote }} 
     mongodbUsername: {{ .MongoDB.Username }} 
     mongodbDatabase: {{ .MongoDB.Database }} 
   secrets:
@@ -189,7 +189,7 @@ cloud-library-server:
     enabled: {{ .Route.Enabled }}
 
   s3:
-    endpoint: {{ .S3.Endpoint }}
+    endpoint: {{ .S3.Endpoint | quote }}
     bucket: {{ .S3.Bucket }}
     access_key: {{ .S3.AccessKey }}
     secret_key: {{ .S3.SecretKey }}
@@ -199,7 +199,7 @@ cloud-library-server:
     mongodbPassword: {{ .MongoDB.Password }} 
     mongodbRootPassword: {{ .MongoDB.RootPassword }}
     mongodbDatabase: {{ .MongoDB.Database }}
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
 
   rabbitmq:
     username: {{ .RabbitMQ.Username }}
@@ -236,9 +236,9 @@ cloud-library-pam:
     mongodbPassword: {{ .MongoDB.Password }}
     mongodbRootPassword: {{ .MongoDB.RootPassword }} 
     mongodbDatabase: {{ .MongoDB.Database }} 
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
   s3:
-    endpoint: {{ .S3.Endpoint }} 
+    endpoint: {{ .S3.Endpoint | quote }} 
     bucket: {{ .S3.Bucket }} 
     access_key: {{ .S3.AccessKey }}
     secret_key: {{ .S3.SecretKey }} 
@@ -246,10 +246,10 @@ cloud-library-pam:
 cloud-library-cronjobs:
   purger:
     image:
-      pullSecret: 
+      pullSecrets: 
         - name: {{ .PullCredentials.Name }}
     s3:
-      endpoint:  {{ .S3.Endpoint }}
+      endpoint:  {{ .S3.Endpoint | quote }}
       bucket: {{ .S3.Bucket }}
       access_key: {{ .S3.AccessKey }} 
       secret_key: {{ .S3.SecretKey }}
@@ -258,13 +258,13 @@ cloud-library-cronjobs:
       mongodbPassword: {{ .MongoDB.Password }} 
       mongodbRootPassword: {{ .MongoDB.RootPassword }}
       mongodbDatabase: {{ .MongoDB.Database }} 
-      mongodbEndpoint: {{ .MongoDB.Endpoint }}
+      mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
   cleaner:
     image:
       pullSecret:
         - name: {{ .PullCredentials.Name }}
     s3:
-      endpoint:  {{ .S3.Endpoint }}
+      endpoint:  {{ .S3.Endpoint | quote }}
       bucket: {{ .S3.Bucket }}
       access_key: {{ .S3.AccessKey }} 
       secret_key: {{ .S3.SecretKey }}
@@ -273,7 +273,7 @@ cloud-library-cronjobs:
       mongodbPassword: {{ .MongoDB.Password }} 
       mongodbRootPassword: {{ .MongoDB.RootPassword }}
       mongodbDatabase: {{ .MongoDB.Database }} 
-      mongodbEndpoint: {{ .MongoDB.Endpoint }}
+      mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
 
 remote-build-server:
   image:
@@ -306,7 +306,7 @@ remote-build-server:
     mongodbPassword: {{ .MongoDB.Password }} 
     mongodbRootPassword: {{ .MongoDB.RootPassword }} 
     mongodbDatabase: {{ .MongoDB.Database }}
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
 
 remote-build-manager:
   serviceMonitor:
@@ -334,7 +334,7 @@ remote-build-manager:
     mongodbPassword: {{ .MongoDB.Password }} 
     mongodbRootPassword: {{ .MongoDB.RootPassword }}
     mongodbDatabase: {{ .MongoDB.Database }} 
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
   env:
     kubevirt_image_pull_secret: {{ .PullCredentials.Name }}
   rsaSecretName: {{ .TokenService.RSASecretName }} 
@@ -353,7 +353,7 @@ remote-build-jim:
     mongodbPassword: {{ .MongoDB.Password }}
     mongodbRootPassword: {{ .MongoDB.RootPassword }} 
     mongodbDatabase: {{ .MongoDB.Database }} 
-    mongodbEndpoint: {{ .MongoDB.Endpoint }}
+    mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
 
 remote-build-cronjobs:
   purger:
@@ -362,7 +362,7 @@ remote-build-cronjobs:
         mongodbPassword: {{ .MongoDB.Password }}
         mongodbRootPassword: {{ .MongoDB.RootPassword }} 
         mongodbDatabase: {{ .MongoDB.Database }} 
-        mongodbEndpoint: {{ .MongoDB.Endpoint }}
+        mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
 
 redis:
   password: {{ .Redis.Password }}

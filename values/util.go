@@ -38,6 +38,9 @@ func Ask(prompt string, scanFn func() error) error {
 }
 
 func ScanString(defaultChoice string) (string, error) {
+	if defaultChoice != "" {
+		fmt.Printf("[%s] ", defaultChoice)
+	}
 	reader := bufio.NewReader(os.Stdin)
 	text, err := reader.ReadString('\n')
 	if err != nil {

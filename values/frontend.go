@@ -8,7 +8,7 @@ type Frontend struct {
 func ConfigFrontend(root *Values) error {
 	vals := &root.Frontend
 	if err := Ask("Frontend URI:", func() (err error) {
-		vals.URI, err = ScanString("")
+		vals.URI, err = ScanString("https://cloud.lvh.me")
 		return
 	}); err != nil {
 		return err

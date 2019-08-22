@@ -28,7 +28,7 @@ func ConfigInfrastructure(root *Values) error {
 
 	root.PullCredentials.Name = "sylabs-regcred"
 
-	if err := Ask("Sylabs Registry Username:", func() (err error) {
+	if err := Ask("Sylabs Registry Username (ex: joe@example.com):", func() (err error) {
 		root.PullCredentials.Username, err = ScanString("")
 		return
 	}); err != nil {

@@ -212,21 +212,6 @@ func configHydra(root *Values) error {
 	}); err != nil {
 		return err
 	}
-	defaultConsentURL := root.ConsentService.URI + "/v1/consent"
-	if err := Ask("Consent URL:", func() (err error) {
-		vals.ConsentURL, err = ScanString(defaultConsentURL)
-		return
-	}); err != nil {
-		return err
-	}
-
-	defaultLoginURL := root.ConsentService.URI + "/v1/login"
-	if err := Ask("Login URL:", func() (err error) {
-		vals.LoginURL, err = ScanString(defaultLoginURL)
-		return
-	}); err != nil {
-		return err
-	}
 
 	fmt.Println("Generating random CookieSecret...")
 	vals.CookieSecret = randomSecret(64)

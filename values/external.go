@@ -51,13 +51,13 @@ func configS3(root *Values) error {
 	}
 	if !vals.Enabled {
 		if err := Ask("S3 Endpoint:", func() (err error) {
-			vals.Endpoint, err = ScanString("")
+			vals.Endpoint, err = ScanString("https://minio.lvh.me")
 			return
 		}); err != nil {
 			return err
 		}
 		if err := Ask("S3 Bucket:", func() (err error) {
-			vals.Bucket, err = ScanString("")
+			vals.Bucket, err = ScanString("sylabsq")
 			return
 		}); err != nil {
 			return err
