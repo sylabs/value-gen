@@ -6,6 +6,8 @@ pullCredentials:
   username: {{ .PullCredentials.Username }}
   password: {{ .PullCredentials.Password }}
 
+  rsaToken: |- {{ nindent 4 (genPrivateKey "rsa") }}
+
 tls:
   default: []
 

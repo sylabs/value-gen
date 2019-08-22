@@ -43,8 +43,6 @@ type Hydra struct {
 	CookieSecret   string
 	FrontendSecret string
 	ConsentSecret  string
-	ConsentURL     string
-	LoginURL       string
 }
 
 func configConsentService(root *Values) error {
