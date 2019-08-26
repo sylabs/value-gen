@@ -23,10 +23,10 @@ consent-service:
     enabled: {{ .Ingress.Enabled }}
     path: /
     hosts:
-      - {{ .ConsentService.URI }}
+      - {{ .ConsentService.Hostname }}
     tls:
       - hosts:
-        - {{ .ConsentService.URI }}
+        - {{ .ConsentService.Hostname }}
 
   route:
     enabled: {{ .Route.Enabled }} 
@@ -37,7 +37,7 @@ consent-service:
     google_oauth2_client_secret: {{ .ConsentService.OAuth.Google.ClientSecret }}
     {{- end }}
     hydra_client_secret: {{ .Hydra.ClientSecret }}
-    service_uri: {{ .ConsentService.URI }}
+    service_uri: https://{{ .ConsentService.Hostname }}
     admin_user: {{ .ConsentService.AdminUser }}
   mongodb:
     mongodbUsername: {{ .MongoDB.Username }} 
@@ -72,20 +72,20 @@ hydra:
     enabled: {{ .Ingress.Enabled }}
     path: /
     hosts:
-      - {{ .Hydra.URI }}
+      - {{ .Hydra.Hostname }}
     tls:
       - hosts:
-        - {{ .Hydra.URI }}
+        - {{ .Hydra.Hostname }}
   
   route:
     enabled: {{ .Route.Enabled }}
 
   env:
-    oauth2_issuer_url: {{ .Hydra.URI }}
-    oauth2_consent_url: {{ .ConsentService.URI }}/v1/consent
-    oauth2_login_url: {{ .ConsentService.URI }}/v1/login
-    oauth2_logout_redirect_url: {{ .Frontend.URI }}
-    callback_urls: {{ .Frontend.URI -}},{{- .Frontend.RevokeURI }}
+    oauth2_issuer_url: https://{{ .Hydra.Hostname }}
+    oauth2_consent_url: https://{{ .ConsentService.Hostname }}/v1/consent
+    oauth2_login_url: https://{{ .ConsentService.Hostname }}/v1/login
+    oauth2_logout_redirect_url: https://{{ .Frontend.Hostname }}
+    callback_urls: https://{{ .Frontend.Hostname }},{{ .Frontend.RevokeURI }}
     hydra_frontend_secret: {{ .Hydra.FrontendSecret }}
     hydra_consent_secret: {{ .Hydra.ConsentSecret }} 
   
@@ -96,16 +96,16 @@ token-service:
   ingress:
     enabled: {{ .Ingress.Enabled }}
     hosts:
-      - {{ .TokenService.URI }}
+      - {{ .TokenService.Hostname }}
     tls:
       - hosts:
-        - {{ .TokenService.URI }}
+        - {{ .TokenService.Hostname }}
 
   route: 
     enabled: {{ .Route.Enabled }} 
 
   env:
-    service_uri: {{ .TokenService.URI }}
+    service_uri: https://{{ .TokenService.Hostname }}
   image:
     pullSecrets:
       - name: {{ .PullCredentials.Name }}
@@ -125,22 +125,22 @@ frontend:
   ingress:
     enabled: {{ .Ingress.Enabled }} 
     hosts:
-      - {{ .Frontend.URI }}
+      - {{ .Frontend.Hostname }}
     tls:
       - hosts:
-        - {{ .Frontend.URI }}
+        - {{ .Frontend.Hostname }}
 
   route:
     enabled: {{ .Route.Enabled }} 
 
   env:
-    public_host_library: {{ .CloudLibraryServer.URI }}
-    public_host_key_service: {{ .KeyService.URI }}
-    public_host_build_service: {{ .RemoteBuildServer.URI }} 
-    public_host_consent_service: {{ .ConsentService.URI }}
-    public_host_token_service: {{ .TokenService.URI }}
-    public_host_hydra: {{ .Hydra.URI }}
-    public_host_front_end: {{ .Frontend.URI }}
+    public_host_library: https://{{ .CloudLibraryServer.Hostname }}
+    public_host_key_service: https://{{ .KeyService.Hostname }}
+    public_host_build_service: https://{{ .RemoteBuildServer.Hostname }} 
+    public_host_consent_service: https://{{ .ConsentService.Hostname }}
+    public_host_token_service: https://{{ .TokenService.Hostname }}
+    public_host_hydra: https://{{ .Hydra.Hostname }}
+    public_host_front_end: https://{{ .Frontend.Hostname }}
 
 key-service:
   image:
@@ -162,10 +162,10 @@ key-service:
   ingress:
     enabled: {{ .Ingress.Enabled }} 
     hosts:
-      - {{ .KeyService.URI }}
+      - {{ .KeyService.Hostname }}
     tls:
       - hosts:
-        - {{ .KeyService.URI }}
+        - {{ .KeyService.Hostname }}
 
   route:
     enabled: {{ .Route.Enabled }} 
@@ -182,10 +182,10 @@ cloud-library-server:
   ingress:
     enabled: {{ .Ingress.Enabled }}
     hosts:
-      - {{ .CloudLibraryServer.URI }}
+      - {{ .CloudLibraryServer.Hostname }}
     tls:
       - hosts:
-        - {{ .CloudLibraryServer.URI }} 
+        - {{ .CloudLibraryServer.Hostname }} 
 
   route:
     enabled: {{ .Route.Enabled }}
@@ -214,10 +214,10 @@ minio:
   ingress:
     enabled: {{ .Ingress.Enabled }}
     hosts:
-      - {{ .Minio.URI }}
+      - {{ .Minio.Hostname }}
     tls:
       - hosts:
-        - {{ .Minio.URI }}
+        - {{ .Minio.Hostname }}
   
   route:
     enabled: {{ .Route.Enabled }} 
@@ -285,10 +285,10 @@ remote-build-server:
   ingress:
     enabled: {{ .Ingress.Enabled }} 
     hosts:
-      - {{ .RemoteBuildServer.URI }} 
+      - {{ .RemoteBuildServer.Hostname }} 
     tls:
       - hosts:
-        - {{ .RemoteBuildServer.URI }}
+        - {{ .RemoteBuildServer.Hostname }}
   
   route:
     enabled: {{ .Route.Enabled }} 
@@ -320,10 +320,10 @@ remote-build-manager:
   ingress:
     enabled: {{ .Ingress.Enabled }}
     hosts:
-      - {{ .RemoteBuildManager.URI }}
+      - {{ .RemoteBuildManager.Hostname }}
     tls:
       - hosts:
-        - {{ .RemoteBuildManager.URI }}
+        - {{ .RemoteBuildManager.Hostname }}
   
   route:
     enabled: {{ .Route.Enabled }}

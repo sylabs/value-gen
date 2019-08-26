@@ -1,14 +1,14 @@
 package values
 
 type KeyService struct {
-	URI string
+	Hostname string
 }
 
 func ConfigKeyService(root *Values) error {
 	vals := &root.KeyService
-	defaultKeys := "https://keys.lvh.me"
-	return Ask("KeyService URI:", func() (err error) {
-		vals.URI, err = ScanString(defaultKeys)
+	defaultKeys := "keys.lvh.me"
+	return Ask("KeyService Hostname:", func() (err error) {
+		vals.Hostname, err = ScanString(defaultKeys)
 		return
 	})
 }

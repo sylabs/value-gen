@@ -5,7 +5,7 @@ import (
 )
 
 type TokenService struct {
-	URI           string
+	Hostname      string
 	RSASecretName string
 }
 
@@ -25,8 +25,8 @@ type CustomOAuth2 struct {
 }
 
 type ConsentService struct {
-	URI   string
-	OAuth struct {
+	Hostname string
+	OAuth    struct {
 		Google    OAuth2
 		GitHub    OAuth2
 		Microsoft OAuth2
@@ -38,7 +38,7 @@ type ConsentService struct {
 }
 
 type Hydra struct {
-	URI            string
+	Hostname       string
 	ClientSecret   string
 	CookieSecret   string
 	FrontendSecret string
@@ -47,8 +47,8 @@ type Hydra struct {
 
 func configConsentService(root *Values) error {
 	vals := &root.ConsentService
-	if err := Ask("ConsentService URI:", func() (err error) {
-		vals.URI, err = ScanString("https://auth.lvh.me")
+	if err := Ask("ConsentService Hostname:", func() (err error) {
+		vals.Hostname, err = ScanString("auth.lvh.me")
 		return
 	}); err != nil {
 		return err
@@ -205,7 +205,7 @@ func configHydra(root *Values) error {
 	vals := &root.Hydra
 
 	if err := Ask("Hydra URI:", func() (err error) {
-		vals.URI, err = ScanString("https://hydra.lvh.me")
+		vals.Hostname, err = ScanString("hydra.lvh.me")
 		return
 	}); err != nil {
 		return err
@@ -227,7 +227,7 @@ func configTokenService(root *Values) error {
 	vals := &root.TokenService
 
 	if err := Ask("TokenService URI:", func() (err error) {
-		vals.URI, err = ScanString("https://token.lvh.me")
+		vals.Hostname, err = ScanString("token.lvh.me")
 		return
 	}); err != nil {
 		return err

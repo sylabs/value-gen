@@ -1,27 +1,27 @@
 package values
 
 type RemoteBuildServer struct {
-	URI string
+	Hostname string
 }
 
 type RemoteBuildManager struct {
-	URI string
+	Hostname string
 }
 
 func configRemoteBuildServer(root *Values) error {
 	vals := &root.RemoteBuildServer
-	defaultServer := "https://build.lvh.me"
+	defaultServer := "build.lvh.me"
 	return Ask("RemoteBuildServer URI:", func() (err error) {
-		vals.URI, err = ScanString(defaultServer)
+		vals.Hostname, err = ScanString(defaultServer)
 		return
 	})
 }
 
 func configRemoteBuildManager(root *Values) error {
 	vals := &root.RemoteBuildManager
-	defaultManager := "https://manager.lvh.me"
+	defaultManager := "manager.lvh.me"
 	return Ask("RemoteBuildManager URI:", func() (err error) {
-		vals.URI, err = ScanString(defaultManager)
+		vals.Hostname, err = ScanString(defaultManager)
 		return
 	})
 }

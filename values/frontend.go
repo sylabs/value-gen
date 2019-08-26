@@ -1,19 +1,19 @@
 package values
 
 type Frontend struct {
-	URI       string
+	Hostname  string
 	RevokeURI string
 }
 
 func ConfigFrontend(root *Values) error {
 	vals := &root.Frontend
-	if err := Ask("Frontend URI:", func() (err error) {
-		vals.URI, err = ScanString("https://cloud.lvh.me")
+	if err := Ask("Frontend Hostname:", func() (err error) {
+		vals.Hostname, err = ScanString("cloud.lvh.me")
 		return
 	}); err != nil {
 		return err
 	}
-	defaultRevoke := vals.URI + "/assets/html/auth-revoke.html"
+	defaultRevoke := "https://" + vals.Hostname + "/assets/html/auth-revoke.html"
 	if err := Ask("Revoke URI:", func() (err error) {
 		vals.RevokeURI, err = ScanString(defaultRevoke)
 		return
