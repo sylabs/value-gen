@@ -11,7 +11,7 @@ type S3 struct {
 }
 
 type Minio struct {
-	URI string
+	Hostname string
 }
 
 type RabbitMQ struct {
@@ -51,13 +51,13 @@ func configS3(root *Values) error {
 	}
 	if !vals.Enabled {
 		if err := Ask("S3 Endpoint:", func() (err error) {
-			vals.Endpoint, err = ScanString("https://minio.lvh.me")
+			vals.Endpoint, err = ScanString("https://s3.example.com")
 			return
 		}); err != nil {
 			return err
 		}
 		if err := Ask("S3 Bucket:", func() (err error) {
-			vals.Bucket, err = ScanString("sylabsq")
+			vals.Bucket, err = ScanString("sylabs")
 			return
 		}); err != nil {
 			return err
@@ -75,8 +75,8 @@ func configS3(root *Values) error {
 			return err
 		}
 	} else {
-		if err := Ask("Minio URI:", func() (err error) {
-			root.Minio.URI, err = ScanString("https://minio.lvh.me")
+		if err := Ask("Minio Hostname:", func() (err error) {
+			root.Minio.Hostname, err = ScanString("minio.lvh.me")
 			return
 		}); err != nil {
 			return err
