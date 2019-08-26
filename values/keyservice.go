@@ -6,7 +6,7 @@ type KeyService struct {
 
 func ConfigKeyService(root *Values) error {
 	vals := &root.KeyService
-	defaultKeys := "keys.lvh.me"
+	defaultKeys := "keys." + root.DefaultDomain
 	return Ask("KeyService Hostname:", func() (err error) {
 		vals.Hostname, err = ScanString(defaultKeys)
 		return

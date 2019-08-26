@@ -263,7 +263,7 @@ cloud-library-cronjobs:
       mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
   cleaner:
     image:
-      pullSecret:
+      pullSecrets:
         - name: {{ .PullCredentials.Name }}
     s3:
       endpoint:  {{ .S3.Endpoint | quote }}
@@ -329,7 +329,7 @@ remote-build-manager:
     enabled: {{ .Route.Enabled }}
 
   image:
-    pullSecret:
+    pullSecrets:
       - name: {{ .PullCredentials.Name }}
   mongodb:
     mongodbUsername: {{ .MongoDB.Username }}

@@ -8,6 +8,7 @@ import (
 )
 
 type Values struct {
+	DefaultDomain string
 	// Auth Service Structs
 	TokenService   TokenService
 	ConsentService ConsentService
@@ -42,6 +43,12 @@ type Values struct {
 }
 
 func ConfigValues(root *Values) error {
+	if err := Ask("Default Domain:", func() (err error) {
+		root.DefaultDomain, err = ScanString("lvh.me")
+		return
+	}); err != nil {
+		return err
+	}
 
 	cs := [](func(*Values) error){ConfigInfrastructure, ConfigExternal, ConfigAuthService, ConfigKeyService, ConfigCloudLibrary, ConfigRemoteBuild, ConfigFrontend}
 	for _, c := range cs {
