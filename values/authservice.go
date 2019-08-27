@@ -42,7 +42,6 @@ type Hydra struct {
 	ClientSecret   string
 	CookieSecret   string
 	FrontendSecret string
-	ConsentSecret  string
 }
 
 func configConsentService(root *Values) error {
@@ -220,8 +219,6 @@ func configHydra(root *Values) error {
 	vals.FrontendSecret = randomSecret(64)
 	fmt.Println("Generating random ClientSecret...")
 	vals.ClientSecret = randomSecret(64)
-	fmt.Println("Generating random ConsentSecret...")
-	vals.ConsentSecret = randomSecret(64)
 
 	return nil
 }
