@@ -75,8 +75,9 @@ func configS3(root *Values) error {
 			return err
 		}
 	} else {
+		defaultHostname := "minio." + root.DefaultDomain
 		if err := Ask("Minio Hostname:", func() (err error) {
-			root.Minio.Hostname, err = ScanString("minio.lvh.me")
+			root.Minio.Hostname, err = ScanString(defaultHostname)
 			return
 		}); err != nil {
 			return err

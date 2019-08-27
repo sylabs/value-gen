@@ -7,8 +7,9 @@ type Frontend struct {
 
 func ConfigFrontend(root *Values) error {
 	vals := &root.Frontend
+	defaultHostname := "cloud." + root.DefaultDomain
 	if err := Ask("Frontend Hostname:", func() (err error) {
-		vals.Hostname, err = ScanString("cloud.lvh.me")
+		vals.Hostname, err = ScanString(defaultHostname)
 		return
 	}); err != nil {
 		return err

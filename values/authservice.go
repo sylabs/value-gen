@@ -47,8 +47,10 @@ type Hydra struct {
 
 func configConsentService(root *Values) error {
 	vals := &root.ConsentService
+
+	defaultHostname := "auth." + root.DefaultDomain
 	if err := Ask("ConsentService Hostname:", func() (err error) {
-		vals.Hostname, err = ScanString("auth.lvh.me")
+		vals.Hostname, err = ScanString(defaultHostname)
 		return
 	}); err != nil {
 		return err
@@ -204,8 +206,9 @@ func configConsentService(root *Values) error {
 func configHydra(root *Values) error {
 	vals := &root.Hydra
 
+	defaultHostname := "hydra." + root.DefaultDomain
 	if err := Ask("Hydra URI:", func() (err error) {
-		vals.Hostname, err = ScanString("hydra.lvh.me")
+		vals.Hostname, err = ScanString(defaultHostname)
 		return
 	}); err != nil {
 		return err
@@ -225,9 +228,9 @@ func configHydra(root *Values) error {
 
 func configTokenService(root *Values) error {
 	vals := &root.TokenService
-
+	defaultHostname := "token." + root.DefaultDomain
 	if err := Ask("TokenService URI:", func() (err error) {
-		vals.Hostname, err = ScanString("token.lvh.me")
+		vals.Hostname, err = ScanString(defaultHostname)
 		return
 	}); err != nil {
 		return err

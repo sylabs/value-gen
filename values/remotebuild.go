@@ -10,7 +10,7 @@ type RemoteBuildManager struct {
 
 func configRemoteBuildServer(root *Values) error {
 	vals := &root.RemoteBuildServer
-	defaultServer := "build.lvh.me"
+	defaultServer := "build." + root.DefaultDomain
 	return Ask("RemoteBuildServer URI:", func() (err error) {
 		vals.Hostname, err = ScanString(defaultServer)
 		return
@@ -19,7 +19,7 @@ func configRemoteBuildServer(root *Values) error {
 
 func configRemoteBuildManager(root *Values) error {
 	vals := &root.RemoteBuildManager
-	defaultManager := "manager.lvh.me"
+	defaultManager := "manager." + root.DefaultDomain
 	return Ask("RemoteBuildManager URI:", func() (err error) {
 		vals.Hostname, err = ScanString(defaultManager)
 		return
