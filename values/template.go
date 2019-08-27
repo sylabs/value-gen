@@ -31,6 +31,18 @@ consent-service:
   route:
     enabled: {{ .Route.Enabled }} 
 
+  service:
+    name: consent-service
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: "ClusterIP"
+    port: 3000
+    containerPort: 3000
+    targetPort: 3000
+
   env:
     {{- if .ConsentService.OAuth.Google.Enabled }}
     google_oauth2_client_id: {{ .ConsentService.OAuth.Google.ClientID }}
@@ -93,6 +105,18 @@ token-service:
   serviceMonitor:
     enabled: {{ .ServiceMonitor.Enabled }}
 
+  service:
+    name: token-service
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+    port: 5052
+    containerPort: 5052
+    targetPort: 5052
+
   ingress:
     enabled: {{ .Ingress.Enabled }}
     hosts:
@@ -121,6 +145,24 @@ frontend:
   image:
     pullSecrets:
       - name: {{ .PullCredentials.Name }}
+
+  service:
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+    ports:
+      - name: https
+        protocol: TCP
+        port: 8443
+        containerPort: 8443
+        targetPort: 8443
+      - name: http
+        protocol: TCP
+        port: 8080
+        containerPort: 8080
+        targetPort: 8080
   
   ingress:
     enabled: {{ .Ingress.Enabled }} 
@@ -158,7 +200,18 @@ key-service:
 
   serviceMonitor:
     enabled: {{ .ServiceMonitor.Enabled }}
-   
+
+  service:
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+    port: 11371
+    containerPort: 11371
+    targetPort: 11371
+
   ingress:
     enabled: {{ .Ingress.Enabled }} 
     hosts:
@@ -175,6 +228,18 @@ cloud-library-server:
   image:
     pullSecrets:  
       - name: {{ .PullCredentials.Name }}
+
+  service:
+    name: api-rest
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+    port: 5150
+    containerPort: 5150
+    targetPort: 5150
 
   serviceMonitor:
     enabled: {{ .ServiceMonitor.Enabled }}
@@ -281,6 +346,17 @@ remote-build-server:
   image:
     pullSecrets: 
       - name: {{ .PullCredentials.Name }}
+
+  service:
+    annotations: {}
+    clusterIP: ""
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    type: ClusterIP
+    port: 5050
+    containerPort: 5050
+    targetPort: 5050
 
   ingress:
     enabled: {{ .Ingress.Enabled }} 
