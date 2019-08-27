@@ -59,7 +59,7 @@ postgresql:
 
 hydra:
   postgresql:
-    postgresqlUser: {{ .Postgres.Username }}
+    postgresUser: {{ .Postgres.Username }}
     postgresqlPassword: {{ .Postgres.Password }}
     postgresqlDatabase: {{ .Postgres.Database }} 
     postgresqlEndpoint: {{ .Postgres.Endpoint | quote }} 
