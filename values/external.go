@@ -84,7 +84,7 @@ func configS3(root *Values) error {
 		}
 		fmt.Println("S3 Endpoint:")
 		fmt.Println("local")
-		vals.Endpoint = "local"
+		vals.Endpoint = root.Minio.Hostname
 		fmt.Println("S3 Bucket:")
 		fmt.Println("sylabs")
 		vals.Bucket = "sylabs"
