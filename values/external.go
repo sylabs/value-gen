@@ -84,6 +84,7 @@ func configS3(root *Values) error {
 		}
 		fmt.Println("S3 Endpoint:")
 		fmt.Println("local")
+		vals.Endpoint = root.Minio.Hostname
 		fmt.Println("S3 Bucket:")
 		fmt.Println("sylabs")
 		vals.Bucket = "sylabs"
@@ -185,7 +186,7 @@ func configPostgres(root *Values) error {
 	} else {
 		vals.Username = "postgres"
 		fmt.Println("Generating random Postgres password...")
-		vals.Password = randomSecret(64)
+		vals.Password = randomSecret(32) // postgres doesn't allow long passwords
 		vals.Database = "hydra"
 	}
 
