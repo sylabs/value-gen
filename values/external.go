@@ -186,7 +186,7 @@ func configPostgres(root *Values) error {
 	} else {
 		vals.Username = "postgres"
 		fmt.Println("Generating random Postgres password...")
-		vals.Password = randomSecret(64)
+		vals.Password = randomSecret(32) // postgres doesn't allow long passwords
 		vals.Database = "hydra"
 	}
 
