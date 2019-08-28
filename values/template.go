@@ -59,7 +59,7 @@ postgresql:
 
 hydra:
   postgresql:
-    postgresqlUsername: {{ .Postgres.Username }}
+    postgresUser: {{ .Postgres.Username }}
     postgresqlPassword: {{ .Postgres.Password }}
     postgresqlDatabase: {{ .Postgres.Database }} 
     postgresqlEndpoint: {{ .Postgres.Endpoint | quote }} 
@@ -134,13 +134,13 @@ frontend:
     enabled: {{ .Route.Enabled }} 
 
   env:
-    public_host_library: https://{{ .CloudLibraryServer.Hostname }}
-    public_host_key_service: https://{{ .KeyService.Hostname }}
-    public_host_build_service: https://{{ .RemoteBuildServer.Hostname }} 
-    public_host_consent_service: https://{{ .ConsentService.Hostname }}
-    public_host_token_service: https://{{ .TokenService.Hostname }}
-    public_host_hydra: https://{{ .Hydra.Hostname }}
-    public_host_front_end: https://{{ .Frontend.Hostname }}
+    public_host_library: {{ .CloudLibraryServer.Hostname }}
+    public_host_key_service: { .KeyService.Hostname }}
+    public_host_build_service: {{ .RemoteBuildServer.Hostname }} 
+    public_host_consent_service: {{ .ConsentService.Hostname }}
+    public_host_token_service: {{ .TokenService.Hostname }}
+    public_host_hydra: {{ .Hydra.Hostname }}
+    public_host_front_end: {{ .Frontend.Hostname }}
 
 key-service:
   image:
