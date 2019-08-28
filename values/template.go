@@ -87,7 +87,7 @@ hydra:
     oauth2_logout_redirect_url: https://{{ .Frontend.Hostname }}
     callback_urls: https://{{ .Frontend.Hostname }},{{ .Frontend.RevokeURI }}
     hydra_frontend_secret: {{ .Hydra.FrontendSecret }}
-    hydra_consent_secret: {{ .Hydra.ConsentSecret }} 
+    hydra_consent_secret: {{ .Hydra.ClientSecret }} 
   
 token-service:
   serviceMonitor:
