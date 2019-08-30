@@ -135,7 +135,7 @@ frontend:
 
   env:
     public_host_library: {{ .CloudLibraryServer.Hostname }}
-    public_host_key_service: { .KeyService.Hostname }}
+    public_host_key_service: {{ .KeyService.Hostname }}
     public_host_build_service: {{ .RemoteBuildServer.Hostname }} 
     public_host_consent_service: {{ .ConsentService.Hostname }}
     public_host_token_service: {{ .TokenService.Hostname }}
@@ -309,6 +309,9 @@ remote-build-server:
     mongodbRootPassword: {{ .MongoDB.RootPassword }} 
     mongodbDatabase: {{ .MongoDB.Database }}
     mongodbEndpoint: {{ .MongoDB.Endpoint | quote }}
+
+  env:
+    manager_uri: wss://{{ .RemoteBuildManager.Hostname }}
 
 remote-build-manager:
   serviceMonitor:
